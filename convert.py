@@ -53,6 +53,7 @@ def get_leading_and_trailing_underscores(string):
 
 
 def to_camel_case(snake_case):
+    snake_case = clean(snake_case)
     leading_, trailing_, snake_case = get_leading_and_trailing_underscores(snake_case)
     camelCase = snake_case.split(UNDERSCORE)
     if len(camelCase) > 1:
@@ -64,6 +65,7 @@ def to_camel_case(snake_case):
 
 
 def to_pascal_case(snake_case):
+    snake_case = clean(snake_case)
     leading_, trailing_, snake_case = get_leading_and_trailing_underscores(snake_case)
     leading_, trailing_ = leading_[1:], trailing_[:-1]
     PascalCase = snake_case.split(UNDERSCORE)
@@ -124,7 +126,10 @@ def json2pojo(obj, classname="POJO"):
 
 if __name__ == "__main__":
     path = sys.argv[1]
-    classname = sys.argv[2]
+    if len(sys.argv) > 2:
+        classname = clean(sys.argv[2])
+    else:
+        classname = None
 
     if os.path.exists(path):
         file = open(path)
