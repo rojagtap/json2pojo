@@ -99,7 +99,7 @@ def list2pojo(obj, datatype, name):
         return datatype.format(javatype)
 
 
-def json2pojo(obj, classname="POJO"):
+def json2pojo(obj, classname):
     pojo = list()
     pojo.append(PUBLIC + CLASS + classname + OPEN_BRACE)
     for key, value in obj.items():
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 2:
         classname = clean(sys.argv[2])
     else:
-        classname = None
+        classname = "POJO"
 
     if os.path.exists(path):
         file = open(path)
