@@ -3,6 +3,7 @@ A simple utility for translating json (responses) into plain old java objects (P
 
 ### Requirements:
 1. python 3.x
+2. dateutil, install using `pip install python-dateutil`
 
 ### How to use:
 1. Clone the repo and `cd` into the project root directory
