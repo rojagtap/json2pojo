@@ -1,5 +1,11 @@
-import os, sys, json, re, logging, datetime
+import json
+import logging
+import os
+import re
+import sys
+
 from dateutil import parser
+
 from keywords import *
 
 mapping = {
@@ -11,6 +17,7 @@ mapping = {
 }
 
 inner = []
+
 
 def clean(string):
     return re.sub("[^A-Za-z0-9_]+", "", string).lstrip("[^0-9]+")
@@ -92,7 +99,7 @@ def list2pojo(obj, datatype, name):
         return datatype.format(add_class(obj[0], name))
     else:
         javatype = mapping.get(pytype)
-        if javatype == None:
+        if javatype is None:
             raise TypeError("Unknown datatype: {}".format(pytype))
         elif javatype == STRING:
             javatype = get_if_date(obj[0])
@@ -110,11 +117,11 @@ def json2pojo(obj, classname):
             javatype = add_class(value, to_pascal_case(key))
         else:
             javatype = mapping.get(pytype)
-            if javatype == None:
+            if javatype is None:
                 raise TypeError("Unknown datatype: {}".format(pytype))
             elif javatype == STRING:
                 javatype = get_if_date(value)
-        
+
         varname = to_camel_case(key)
         if not varname[1: -1] == key:
             pojo.append(JSON_PROPERTY.format(key))
@@ -134,15 +141,16 @@ if __name__ == "__main__":
     if os.path.exists(path):
         file = open(path)
         string = file.read()
-
-    try:
-        parsed = json.loads(string)
-    except Exception:
-        logging.error("Failed to parse json. Check if the json is valid")
-
-    inner.append(json2pojo(parsed, classname))
-    pojos = list(map(autoindent, inner))
-    pojos = [format(pojo) for pojo in pojos]
-
-    for pojo in pojos:
-        print(pojo)
+        try:
+            parsed = json.loads(string)
+            inner.append(json2pojo(parsed, classname))
+            pojos = list(map(autoindent, inner))
+            pojos = [format(pojo) for pojo in pojos]
+            for pojo in pojos:
+                print(pojo)
+        except json.decoder.JSONDecodeError:
+            logging.error("Failed to parse json. Check if the json is valid")
+        except TypeError:
+            logging.error("Unknown Datatype")
+    else:
+        logging.error("{} does not exist".format(path))
