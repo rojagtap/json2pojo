@@ -19,6 +19,10 @@ mapping = {
 inner = []
 
 
+def capitalize(string):
+    return string[0].upper() + string[1:]
+
+
 def clean(string):
     return re.sub("[^A-Za-z0-9_]+", "", string).lstrip("[^0-9]+")
 
@@ -64,7 +68,7 @@ def to_camel_case(snake_case):
     leading_, trailing_, snake_case = get_leading_and_trailing_underscores(snake_case)
     camelCase = snake_case.split(UNDERSCORE)
     if len(camelCase) > 1:
-        camelCase = camelCase.pop(0).lower() + "".join(map(str, [word.title() for word in camelCase]))
+        camelCase = camelCase.pop(0).lower() + "".join(map(str, [capitalize(word) for word in camelCase]))
     else:
         camelCase = camelCase[0]
 
@@ -77,7 +81,7 @@ def to_pascal_case(snake_case):
     leading_, trailing_ = leading_[1:], trailing_[:-1]
     PascalCase = snake_case.split(UNDERSCORE)
 
-    PascalCase = "".join(map(str, [word.title() for word in PascalCase]))
+    PascalCase = "".join(map(str, [capitalize(word) for word in PascalCase]))
 
     return leading_ + PascalCase + trailing_
 
